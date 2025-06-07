@@ -40,33 +40,25 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await authService.login(email, password);
-      const { token: newToken, user: newUser } = response.data;
-      
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      
-      setToken(newToken);
-      setUser(newUser);
-    } catch (error) {
-      throw error;
-    }
+    const response = await authService.login(email, password);
+    const { token: newToken, user: newUser } = response.data;
+    
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(newUser));
+    
+    setToken(newToken);
+    setUser(newUser);
   };
 
   const register = async (email: string, password: string, firstName: string, lastName: string) => {
-    try {
-      const response = await authService.register(email, password, firstName, lastName);
-      const { token: newToken, user: newUser } = response.data;
-      
-      localStorage.setItem('token', newToken);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      
-      setToken(newToken);
-      setUser(newUser);
-    } catch (error) {
-      throw error;
-    }
+    const response = await authService.register(email, password, firstName, lastName);
+    const { token: newToken, user: newUser } = response.data;
+    
+    localStorage.setItem('token', newToken);
+    localStorage.setItem('user', JSON.stringify(newUser));
+    
+    setToken(newToken);
+    setUser(newUser);
   };
 
   const logout = () => {
@@ -88,6 +80,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

@@ -25,9 +25,10 @@ router.post('/register', async (req: Request, res: Response) => {
 
     // Hash password
     const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const _hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    // In a real app, you would save to database here
+    // In a real app, you would save to database here using hashedPassword
     // For now, we'll just return a mock response
     const token = jwt.sign(
       { id: 'mock-id', email },

@@ -9,7 +9,7 @@ export const errorHandler = (
   err: AppError,
   req: Request,
   res: Response,
-  next: NextFunction
+  _next: NextFunction
 ) => {
   let error = { ...err };
   error.message = err.message;
@@ -29,14 +29,16 @@ export const errorHandler = (
   }
 
   // Mongoose duplicate key
-  if (err.name === 'MongoError' && (err as any).code === 11000) {
+  if (err.name === 'MongoError' && (err as unknown as { code: number }).code === 11000) {
     const message = 'Duplicate field value entered';
     error = { ...error, message, statusCode: 400 };
   }
 
   // Mongoose validation error
   if (err.name === 'ValidationError') {
-    const message = Object.values((err as any).errors).map((val: any) => val.message).join(', ');
+    const message = Object.values((err as unknown as { errors: { [key: string]: { message: string } } }).errors)
+      .map((val) => val.message)
+      .join(', ');
     error = { ...error, message, statusCode: 400 };
   }
 
