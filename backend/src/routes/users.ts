@@ -22,7 +22,7 @@ router.get('/profile', authenticateToken, (req: AuthenticatedRequest, res: Respo
 });
 
 // Get all users (protected route)
-router.get('/', authenticateToken, (req: AuthenticatedRequest, res: Response) => {
+router.get('/', authenticateToken, (_req: AuthenticatedRequest, res: Response) => {
   // Mock users data
   const mockUsers = [
     {

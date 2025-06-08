@@ -23,7 +23,7 @@ Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,
 })
 
-const renderNavbar = (initialUser = null) => {
+const renderNavbar = (initialUser: any = null) => {
   // Mock localStorage based on user state
   if (initialUser) {
     localStorageMock.getItem.mockImplementation((key) => {
