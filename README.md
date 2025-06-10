@@ -25,6 +25,126 @@ A modern full-stack web application boilerplate built with TypeScript, React, No
 - **Jest** for testing
 - **GitHub Actions** for CI/CD
 
+## 🏗️ Architecture Overview
+
+The following diagram illustrates the complete application architecture, including middleware layers, security components, and data flow:
+
+```mermaid
+graph TB
+    %% User and Browser Layer
+    User["👤 User"] --> Browser["🌐 Browser"]
+    
+    %% CI/CD Layer
+    GitHubActions["⚙️ GitHub Actions<br/>(CI/CD Pipeline)"] --> DockerCompose["🐳 Docker Compose<br/>(Multi-Service Orchestration)"]
+    
+    %% Container Orchestration
+    DockerCompose --> FrontendContainer["📦 Frontend Container<br/>(React + Vite)"]
+    DockerCompose --> BackendContainer["📦 Backend Container<br/>(Node.js + Express)"]
+    DockerCompose --> DatabaseContainer["📦 Database Container<br/>(PostgreSQL 15-Alpine)"]
+    DockerCompose --> AdminerContainer["📦 Adminer Container<br/>(DB Admin UI)"]
+    
+    %% Frontend Layer
+    Browser --> NginxFrontend["🔄 NGINX<br/>(Frontend Proxy)"]
+    NginxFrontend --> ReactApp["⚛️ React App<br/>(TypeScript + Tailwind)"]
+    
+    %% React Application Structure
+    ReactApp --> ReactRouter["🛣️ React Router<br/>(Client-side Routing)"]
+    ReactRouter --> AuthProvider["🔐 Auth Provider<br/>(Context API)"]
+    
+    %% React Components and Pages
+    AuthProvider --> PublicRoutes["📄 Public Routes<br/>/ → Home<br/>/login → Login<br/>/register → Register"]
+    AuthProvider --> ProtectedRoute["🛡️ Protected Route<br/>(Auth Guard)"]
+    ProtectedRoute --> PrivateRoutes["🔒 Private Routes<br/>/dashboard → Dashboard<br/>/profile → Profile"]
+    
+    %% Frontend to Backend Communication
+    ReactApp --> AxiosClient["📡 Axios Client<br/>(HTTP Requests)"]
+    AxiosClient --> BackendProxy["🔄 NGINX Reverse Proxy<br/>(Backend Load Balancer)"]
+    
+    %% Backend Security Middleware Stack
+    BackendProxy --> ExpressApp["🚀 Express.js Server<br/>(Port 5000)"]
+    ExpressApp --> SecurityMiddleware["🛡️ Security Middleware Stack"]
+    
+    %% Detailed Middleware Chain
+    SecurityMiddleware --> Helmet["⛑️ Helmet<br/>(Security Headers)"]
+    SecurityMiddleware --> CORS["🌐 CORS<br/>(Cross-Origin Policy)"]
+    SecurityMiddleware --> RateLimit["⏱️ Rate Limiting<br/>(100 req/15min)"]
+    SecurityMiddleware --> Morgan["📝 Morgan<br/>(HTTP Logging)"]
+    SecurityMiddleware --> BodyParser["📝 Body Parser<br/>(JSON/URL Encoded)"]
+    
+    %% API Routing
+    SecurityMiddleware --> APIRoutes["🛣️ API Routes<br/>(v1 Versioning)"]
+    APIRoutes --> HealthRoute["/api/v1/health<br/>📊 Health Check"]
+    APIRoutes --> AuthRoute["/api/v1/auth<br/>🔐 Authentication<br/>POST /login<br/>POST /register<br/>POST /refresh"]
+    APIRoutes --> UserRoute["/api/v1/users<br/>👤 User Management<br/>GET /profile<br/>PUT /profile<br/>DELETE /account"]
+    
+    %% Authentication Middleware
+    AuthRoute --> JWTMiddleware["🔑 JWT Middleware<br/>(Token Validation)"]
+    UserRoute --> JWTMiddleware
+    
+    %% Controllers Layer
+    AuthRoute --> AuthController["🎮 Auth Controller<br/>(Login/Register Logic)"]
+    UserRoute --> UserController["🎮 User Controller<br/>(CRUD Operations)"]
+    
+    %% Service Layer
+    AuthController --> AuthService["⚙️ Auth Service<br/>(Business Logic)"]
+    UserController --> UserService["⚙️ User Service<br/>(Business Logic)"]
+    
+    %% Database Layer
+    AuthService --> PrismaClient["💎 Prisma Client<br/>(ORM + Query Builder)"]
+    UserService --> PrismaClient
+    
+    %% Database Models
+    PrismaClient --> PostgreSQL["🐘 PostgreSQL Database<br/>(Port 5432)"]
+    PostgreSQL --> UserModel["👤 User Model<br/>id, email, firstName<br/>lastName, password<br/>createdAt, updatedAt"]
+    PostgreSQL --> PostModel["📝 Post Model<br/>id, title, content<br/>published, authorId<br/>createdAt, updatedAt"]
+    PostgreSQL --> ProfileModel["👤 Profile Model<br/>id, bio, avatar<br/>userId (FK)"]
+    
+    %% Database Relationships
+    UserModel --> PostModel
+    UserModel --> ProfileModel
+    
+    %% Error Handling
+    ExpressApp --> ErrorHandler["❌ Error Handler<br/>(Global Error Middleware)"]
+    ExpressApp --> NotFoundHandler["❓ 404 Handler<br/>(Route Not Found)"]
+    
+    %% Development Tools
+    FrontendContainer --> ViteDevServer["⚡ Vite Dev Server<br/>(HMR + Fast Reload)"]
+    BackendContainer --> NodemonDev["🔄 Nodemon<br/>(Auto Restart)"]
+    
+    %% Testing Layer
+    ReactApp --> JestFrontend["🧪 Jest + RTL<br/>(Frontend Testing)"]
+    ExpressApp --> JestBackend["🧪 Jest + Supertest<br/>(Backend Testing)"]
+    
+    %% Code Quality
+    ReactApp --> ESLintFrontend["📋 ESLint + Prettier<br/>(Code Quality)"]
+    ExpressApp --> ESLintBackend["📋 ESLint + Prettier<br/>(Code Quality)"]
+    
+    %% Environment Configuration
+    DockerCompose --> EnvConfig["⚙️ Environment Config<br/>DATABASE_URL<br/>JWT_SECRET<br/>FRONTEND_URL<br/>NODE_ENV"]
+    
+    %% Network Layer
+    FrontendContainer -.-> AppNetwork["🌐 app-network<br/>(Docker Bridge)"]
+    BackendContainer -.-> AppNetwork
+    DatabaseContainer -.-> AppNetwork
+    AdminerContainer -.-> AppNetwork
+    
+    %% Data Persistence
+    DatabaseContainer --> PostgresVolume["💾 postgres_data<br/>(Persistent Volume)"]
+    
+    %% Admin Interface
+    AdminerContainer --> DatabaseContainer
+    User --> AdminerInterface["🔧 Adminer UI<br/>(Port 8080)<br/>Database Management"]
+    AdminerInterface --> DatabaseContainer
+```
+
+**Key Architecture Highlights:**
+- **Layered Security**: Multiple middleware layers including Helmet, CORS, and rate limiting
+- **Microservices Ready**: Containerized services with proper networking and orchestration
+- **Authentication Flow**: JWT-based authentication with protected routes
+- **Database Design**: Normalized PostgreSQL schema with Prisma ORM
+- **Development Workflow**: Automated testing, linting, and CI/CD pipeline
+- **Production Ready**: Load balancing, error handling, and monitoring capabilities
+
 ## 📁 Project Structure
 
 ```
