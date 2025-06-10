@@ -127,12 +127,29 @@ The application is containerized and ready for deployment to any Docker-compatib
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions from the community! Here's how you can help:
+
+1. **Fork the repository**
+2. **Create your feature branch** (`git checkout -b feature/amazing-feature`)
+3. **Commit your changes** (`git commit -m 'Add some amazing feature'`)
+4. **Push to the branch** (`git push origin feature/amazing-feature`)
+5. **Open a Pull Request**
+
+Please make sure to:
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+- Run `npm run lint` and `npm run test` before submitting
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for complete details.
+
+### What this means:
+- ✅ **Commercial use** - Use this project in commercial applications
+- ✅ **Modification** - Modify and adapt the code to your needs  
+- ✅ **Distribution** - Share and distribute the code/application
+- ✅ **Private use** - Use the project privately
+- ❗ **License and copyright notice** - Include the original license and copyright notice in any copy
+
+For more information about the MIT License, visit: https://opensource.org/licenses/MIT
